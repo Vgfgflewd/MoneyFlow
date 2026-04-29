@@ -1,1 +1,42 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam monochrome true
+skinparam shadowing false
+skinparam packageStyle rectangle
 
+title UML-диаграмма: MoneyFlow
+
+package "Слой данных (Logic)" {
+    class FinanceDB {
+      - conn: sqlite3.Connection
+      - cur: sqlite3.Cursor
+      --
+      + __init__()
+      + create_tables(): void
+      + add_expense(amount: float, cat_id: int): void
+      + delete_expense(expense_id: int): void
+      + get_all_expenses(): list<tuple>
+      + get_categories(): list<tuple>
+      + get_total_sum(): float
+    }
+}
+
+package "Слой интерфейса (GUI)" {
+    class MoneyFlowApp {
+      - db: FinanceDB
+      - amount_entry: CTkEntry
+      - cat_menu: CTkOptionMenu
+      - tree: Treeview
+      - total_label: CTkLabel
+      - delete_btn: CTkButton
+      --
+      + __init__()
+      + save_data(): void
+      + delete_data(): void
+      + refresh_table(): void
+    }
+}
+
+MoneyFlowApp "1" o-- "1" FinanceDB : координирует работу >
+note bottom of MoneyFlowApp : Использует CustomTkinter\nдля современного UI
+@enduml
