@@ -1,0 +1,39 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36" version="28.2.8">
+  <diagram id="ER-Large-BW" name="MoneyFlow-ER-Large">
+    <mxGraphModel dx="1426" dy="795" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="table_cat" value="категории" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLastChild=1;collapsible=1;marginBottom=0;align=center;fontSize=18;fillColor=none;strokeColor=#000000;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="100" y="100" width="350" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="cat_id" value="+ id : INTEGER [PK, AUTOINCREMENT]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=10;overflow=hidden;portConstraint=eastwest;rotatable=0;fontSize=15;fontFamily=monospace;" parent="table_cat" vertex="1">
+          <mxGeometry y="40" width="350" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="cat_name" value="- name : TEXT [UNIQUE, NOT NULL]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=10;overflow=hidden;portConstraint=eastwest;rotatable=0;fontSize=15;fontFamily=monospace;" parent="table_cat" vertex="1">
+          <mxGeometry y="75" width="350" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="table_exp" value="расходы" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLastChild=1;collapsible=1;marginBottom=0;align=center;fontSize=18;fillColor=none;strokeColor=#000000;strokeWidth=2;swimlaneLine=1;" parent="1" vertex="1">
+          <mxGeometry x="100" y="350" width="350" height="180" as="geometry">
+            <mxRectangle x="100" y="350" width="120" height="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="exp_id" value="+ id : INTEGER [PK, AUTOINCREMENT]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=10;overflow=hidden;portConstraint=eastwest;rotatable=0;fontSize=15;fontFamily=monospace;" parent="table_exp" vertex="1">
+          <mxGeometry y="40" width="350" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="exp_amount" value="- amount : REAL [NOT NULL]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=10;overflow=hidden;portConstraint=eastwest;rotatable=0;fontSize=15;fontFamily=monospace;" parent="table_exp" vertex="1">
+          <mxGeometry y="75" width="350" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="exp_cat_id" value="- cat_id : INTEGER [FK -&gt; categories.id]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=10;overflow=hidden;portConstraint=eastwest;rotatable=0;fontSize=15;fontFamily=monospace;" parent="table_exp" vertex="1">
+          <mxGeometry y="110" width="350" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="exp_date" value="- date : TEXT [DEFAULT CURRENT_TIME]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=10;overflow=hidden;portConstraint=eastwest;rotatable=0;fontSize=15;fontFamily=monospace;" parent="table_exp" vertex="1">
+          <mxGeometry y="145" width="350" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="relation_line" value="1 : N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=ERmany;endFill=0;startArrow=ERone;startFill=0;fontSize=16;strokeColor=#000000;strokeWidth=2;fontStyle=1;" parent="1" source="table_cat" target="table_exp" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
