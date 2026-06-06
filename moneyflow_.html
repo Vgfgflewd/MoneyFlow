@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Презентация проекта MoneyFlow</title>
+    <!-- Подключаем шрифты и иконки -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #05080f;      /* Глубокий космический черный */
+            --bg-card: #0c111d;      /* Темные контрастные карточки */
+            --border: #223147;       /* Четкие контрастные границы */
+            --text-main: #ffffff;    /* Абсолютно белый текст */
+            --text-muted: #f1f5f9;   /* Почти белый, контрастный серый для описаний */
+            --accent-green: #10b981; /* Изумрудный неон */
+            --accent-blue: #38bdf8;  /* Насыщенный голубой */
+            --accent-pink: #f43f5e;  /* Контрастный розовый */
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
+
+        body {
+            background-color: #010204;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            color: var(--text-main);
+            font-family: var(--font-main);
+        }
+
+        /* 1. КОНТЕЙНЕР ПРЕЗЕНТАЦИИ (Строгое соотношение 16:9) */
+        .presentation-viewport {
+            width: 1280px;
+            height: 720px;
+            background-color: var(--bg-dark);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Декоративная подсветка заднего фона */
+        .presentation-viewport::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(circle at 90% 10%, rgba(16, 185, 129, 0.05) 0%, transparent 45%),
+                              radial-gradient(circle at 10% 90%, rgba(56, 189, 248, 0.05) 0%, transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* СЛАЙДЫ */
+        .slides-container {
+            flex-grow: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.4s;
+            padding: 50px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ТИПОГРАФИКА И ШАПКИ */
+        .slide-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+        }
+
+        .slide-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-left: 6px solid var(--accent-green);
+            padding-left: 18px;
+        }
+
+        .slide-title i {
+            color: var(--accent-green);
+        }
+
+        .slide-number {
+            font-family: var(--font-mono);
+            color: var(--accent-blue);
+            font-size: 16px;
+            background: rgba(56, 189, 248, 0.1);
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            font-weight: 700;
+        }
+
+        h1 { 
+            font-size: 80px; 
+            font-weight: 800; 
+            letter-spacing: -2px; 
+            color: var(--text-main); 
+        }
+        
+        h1 span { 
+            color: var(--accent-green); 
+        }
+
+        h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+        }
+
+        p, li { 
+            font-size: 19px; 
+            line-height: 1.6; 
+            color: var(--text-muted); 
+        }
+
+        /* СЕТКА ДЛЯ СЛАЙДОВ */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            flex-grow: 1;
+            align-items: center;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* 2. БЛОК-СХЕМА АЛГОРИТМА (Визуальные элементы) */
+        .flowchart-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 30px 40px;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            margin-top: 20px;
+        }
+
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #111a2e;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 18px 24px;
+            text-align: center;
+            min-width: 190px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+            position: relative;
+        }
+
+        .flow-step.accent {
+            border-color: var(--accent-green);
+        }
+
+        .flow-step.warning {
+            border-color: #fbbf24;
+        }
+
+        .flow-step i {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: var(--accent-blue);
+        }
+
+        .flow-step.accent i { color: var(--accent-green); }
+        .flow-step.warning i { color: #fbbf24; }
+
+        .flow-step span {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .flow-step p {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        .flow-arrow {
+            font-size: 32px;
+            color: var(--border);
+            display: flex;
+            align-items: center;
+        }
+
+        /* 3. UML ДИАГРАММА КЛАССОВ (Визуальные элементы) */
+        .uml-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 80px;
+            width: 100%;
+            padding: 30px;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            margin-top: 10px;
+        }
+
+        .uml-class {
+            background: #0d1527;
+            border: 2px solid var(--accent-blue);
+            border-radius: 8px;
+            width: 340px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        .uml-class.secondary {
+            border-color: var(--accent-green);
+        }
+
+        .uml-header {
+            background: #1e293b;
+            padding: 12px;
+            font-weight: 800;
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 17px;
+            border-bottom: 2px solid var(--accent-blue);
+            color: var(--text-main);
+        }
+
+        .uml-class.secondary .uml-header {
+            border-bottom-color: var(--accent-green);
+        }
+
+        .uml-body {
+            padding: 15px;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            color: #cbd5e1;
+            text-align: left;
+        }
+
+        .uml-body div {
+            margin-bottom: 4px;
+        }
+
+        .uml-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 10px 0;
+        }
+
+        .uml-relation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .uml-line {
+            height: 3px;
+            width: 120px;
+            background: var(--accent-green);
+            position: relative;
+        }
+
+        .uml-line::after {
+            content: '◆';
+            position: absolute;
+            right: -8px;
+            top: -15px;
+            font-size: 26px;
+            color: var(--accent-green);
+        }
+
+        .uml-relation-text {
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--accent-green);
+            margin-top: 10px;
+        }
+
+        /* ТАБЛИЦЫ */
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 15px; 
+            background: #090e1a;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        
+        th { 
+            text-align: left; 
+            padding: 18px; 
+            background: #111b2f; 
+            color: var(--text-main); 
+            border-bottom: 3px solid var(--accent-blue); 
+            font-size: 19px;
+            font-weight: 800;
+        }
+        
+        td { 
+            padding: 18px; 
+            border-bottom: 1px solid var(--border); 
+            color: var(--text-muted); 
+            font-size: 17px; 
+        }
+
+        /* СПИСКИ */
+        .styled-list { 
+            list-style: none; 
+        }
+        
+        .styled-list li { 
+            margin-bottom: 20px; 
+            display: flex; 
+            align-items: flex-start; 
+            gap: 20px; 
+        }
+        
+        .styled-list i { 
+            color: var(--accent-green); 
+            margin-top: 4px; 
+            font-size: 24px; 
+        }
+
+        /* ТИТУЛЬНЫЙ И ФИНАЛЬНЫЙ */
+        .center-content { 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center; 
+        }
+        
+        .author-info { 
+            margin-top: 60px; 
+            text-align: right; 
+            align-self: flex-end; 
+            border-right: 5px solid var(--accent-green);
+            padding-right: 25px;
+        }
+        
+        .author-info p { 
+            font-size: 15px; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            color: var(--accent-blue); 
+            font-weight: 700; 
+            margin-bottom: 5px;
+        }
+        
+        .author-info h2 { 
+            font-size: 42px; 
+            color: var(--text-main); 
+            font-weight: 800;
+        }
+
+        .author-info span {
+            color: var(--text-muted);
+            font-size: 20px;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .final-badge {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+            padding: 12px 35px;
+            border-radius: 100px;
+            font-weight: 800;
+            font-size: 20px;
+            border: 2px solid var(--accent-green);
+            letter-spacing: 2px;
+        }
+
+        /* ПАНЕЛЬ НАВИГАЦИИ */
+        .pres-footer {
+            height: 70px;
+            border-top: 2px solid var(--border);
+            background-color: #03050a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .nav-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #1e293b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .nav-dot.active {
+            background: var(--accent-green);
+            transform: scale(1.3);
+            border-color: #ffffff;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="presentation-viewport">
+    
+    <div class="slides-container">
+
+        <!-- Слайд 1: Титульный -->
+        <div class="slide active" id="slide1">
+            <div class="center-content">
+                <div style="font-family: var(--font-mono); color: var(--accent-green); margin-bottom: 25px; letter-spacing: 4px; font-weight: 700; font-size: 18px;">ИТОГОВАЯ ЗАЩИТА РАБОТЫ</div>
+                <h1>Money<span>Flow</span></h1>
+                <p style="font-size: 30px; margin-top: 25px; max-width: 900px; color: #ffffff; font-weight: 600;">Система автоматизированного учета и анализа персональных финансов на базе Python и SQLite</p>
+            </div>
+            <div class="author-info">
+                <p>Разработчик проекта</p>
+                <h2>Шведов Валентин</h2>
+                <span>Группа РПО 24/3</span>
+            </div>
+        </div>
+
+        <!-- Слайд 2: Проблема и решение -->
+        <div class="slide" id="slide2">
+            <div class="slide-header">
+                <h2 class="slide-title"><i class="fa-solid fa-circle-exclamation"></i> Актуальность проекта</h2>
+                <span class="slide-number">Слайд 2 из 8</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; margin-top: 40px; flex-grow: 1;">
+                <div style="background: rgba(244, 63, 94, 0.05); padding: 45px; border-radius: 20px; border: 2px solid rgba(244, 63, 94, 0.35); height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                    <h3 style="color: #fb7185; font-size: 30px; margin-bottom: 20px;"><i class="fa-solid fa-ban"></i> Проблема</h3>
+                    <p style="color: #ffffff;">Ведение личных финансов на бумаге или в Excel-таблицах часто приводит к ошибкам расчетов и утере данных. Сторонние облачные приложения небезопасны, содержат навязчивую рекламу и зависят от интернета.</p>
+                </div>
+                <div style="background: rgba(16, 185, 129, 0.05); padding: 45px; border-radius: 20px; border: 2px solid rgba(16, 185, 129, 0.35); height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                    <h3 style="color: var(--accent-green); font-size: 30px; margin-bottom: 20px;"><i class="fa-solid fa-circle-check"></i> Решение</h3>
+                    <p style="color: #ffffff;">Приложение MoneyFlow — это легкое, быстрое и полностью автономное решение. Вся база данных хранится локально на диске, обеспечивая 100% приватность и мгновенный доступ к финансовым отчетам.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Слайд 3: Технологический стек -->
+        <div class="slide" id="slide3">
+            <div class="slide-header">
+                <h2 class="slide-title"><i class="fa-solid fa-layer-group"></i> Стек технологий</h2>
+                <span class="slide-number">Слайд 3 из 8</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 40px; flex-grow: 1;">
+                <div style="background: var(--bg-card); padding: 45px; border-radius: 20px; border: 2px solid var(--border); text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                    <i class="fa-brands fa-python" style="font-size: 80px; color: var(--accent-blue); margin-bottom: 25px;"></i>
+                    <h3>Python 3.x</h3>
+                    <p style="font-size: 18px; color: var(--text-main);">Реализация бизнес-логики приложения, математических расчетов и управления потоками данных.</p>
+                </div>
+                <div style="background: var(--bg-card); padding: 45px; border-radius: 20px; border: 2px solid var(--border); text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                    <i class="fa-solid fa-table-columns" style="font-size: 80px; color: var(--accent-green); margin-bottom: 25px;"></i>
+                    <h3>Tkinter GUI</h3>
+                    <p style="font-size: 18px; color: var(--text-main);">Построение быстрого, нативного графического интерфейса пользователя.</p>
+                </div>
+                <div style="background: var(--bg-card); padding: 45px; border-radius: 20px; border: 2px solid var(--border); text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                    <i class="fa-solid fa-database" style="font-size: 80px; color: #fbbf24; margin-bottom: 25px;"></i>
+                    <h3>SQLite 3</h3>
+                    <p style="font-size: 18px; color: var(--text-main);">Локальное хранение структуры реляционных таблиц прямо в файле проекта.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Слайд 4: Блок-схема процессов -->
+        <div class="slide" id="slide4">
+            <div class="slide-header">
+                <h2 class="slide-title"><i class="fa-solid fa-diagram-next"></i> Блок-схема алгоритма</h2>
+                <span class="slide-number">Слайд 4 из 8</span>
+            </div>
+            <div class="flowchart-wrapper">
+                <div class="flow-step">
+                    <i class="fa-solid fa-keyboard"></i>
+                    <span>Ввод данных в GUI</span>
+                    <p>Пользователь вводит данные</p>
+                </div>
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="flow-step warning">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Валидация</span>
+                    <p>Обработка try/except</p>
+                </div>
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="flow-step accent">
+                    <i class="fa-solid fa-code"></i>
+                    <span>SQL-запрос</span>
+                    <p>Передача в database.py</p>
+                </div>
+                <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                <div class="flow-step">
+                    <i class="fa-solid fa-rotate"></i>
+                    <span>Обновление UI</span>
+                    <p>Перерисовка таблиц</p>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 35px; font-size: 19px; color: var(--text-muted); font-weight: 600;">Архитектурный цикл обработки финансовой транзакции от момента ввода до фиксации в СУБД.</p>
+        </div>
+
+        <!-- Слайд 5: UML Диаграмма классов -->
+        <div class="slide" id="slide5">
+            <div class="slide-header">
+                <h2 class="slide-title"><i class="fa-solid fa-code-fork"></i> UML Диаграмма классов</h2>
+                <span class="slide-number">Слайд 5 из 8</span>
+            </div>
+            <div class="uml-wrapper">
+                <div class="uml-class">
+                    <div class="uml-header">MoneyFlowApp (GUI)</div>
+                    <div class="uml-body">
+                        <div>- db: FinanceDB</div>
+                        <div>- root: Tk</div>
+                        <div class="uml-divider"></div>
+                        <div>+ add_expense()</div>
+                        <div>+ update_view()</div>
+                        <div>+ show_total()</div>
+                    </div>
+                </div>
+                <div class="uml-relation">
+                    <div class="uml-line"></div>
+                    <span class="uml-relation-text">использует</span>
+                </div>
+                <div class="uml-class secondary">
+                    <div class="uml-header">FinanceDB (Database)</div>
+                    <div class="uml-body">
+                        <div>- conn: sqlite3.Connection</div>
+                        <div>- cursor: sqlite3.Cursor</div>
+                        <div class="uml-divider"></div>
+                        <div>+ insert_data()</div>
+                        <div>+ get_all_records()</div>
+                        <div>+ delete_record()</div>
+                    </div>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 25px; font-size: 18px; color: var(--text-muted); font-weight: 600;">Объектно-ориентированная структура: строгое разделение визуальной части и логики работы СУБД.</p>
+        </div>
+
+        <!-- Слайд 6: Схема базы данных -->
+        <div class="slide" id="slide6">
+            <div class="slide-header">
+                <h2 class="slide-title"><i class="fa-solid fa-database"></i> Схема базы данных</h2>
+                <span class="slide-number">Слайд 6 из 8</span>
+            </div>
+            <div style="background: #03050a; border: 2px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.4); margin-top: 15px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Таблица</th>
+                            <th>Поле (Column)</th>
+                            <th>Тип (Type)</th>
+                            <th>Описание ограничений в СУБД</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b style="color: var(--accent-blue);">kategorii</b></td>
+                            <td style="font-family: var(--font-mono); color: #ffffff;">id (PK), name</td>
+                            <td style="font-family: var(--font-mono);">INTEGER, TEXT</td>
+                            <td>Справочник уникальных категорий трат (UNIQUE ограничение)</td>
+                        </tr>
+                        <tr>
+                            <td><b style="color: var(--accent-green);">rashodi</b></td>
+                            <td style="font-family: var(--font-mono); color: #ffffff;">id (PK), amount, cat_id (FK), date</td>
+                            <td style="font-family: var(--font-mono);">INTEGER, REAL, INTEGER, TEXT</td>
+                            <td>Связанный журнал транзакций. Защищен Foreign Key связью 1:N</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="margin-top: 35px; font-family: var(--font-mono); font-size: 19px; background: rgba(56, 189, 248, 0.08); padding: 22px; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.3); color: #ffffff; text-align: center;">
+                Связь "Один-ко-Многим" на физическом уровне гарантирует ссылочную целостность базы данных.
+            </p>
+        </div>
+
+        <!-- Слайд 7: Заключение о проделанной работе -->
+        <div class="slide" id="slide7">
+            <div class="slide-header">
+                <h2 class="slide-title"><i class="fa-solid fa-circle-check"></i> Итоги разработки проекта</h2>
+                <span class="slide-number">Слайд 7 из 8</span>
+            </div>
+            <div class="center-content" style="align-items: flex-start; text-align: left; width: 100%; margin-top: 10px;">
+                <ul class="styled-list">
+                    <li><i class="fa-solid fa-check-double"></i> <span><strong>Проектирование архитектуры:</strong> Разделены интерфейс (GUI) и ядро базы данных по принципу ООП.</span></li>
+                    <li><i class="fa-solid fa-check-double"></i> <span><strong>Реализация локальной СУБД:</strong> Спроектирована и запущена база данных на SQLite 3 с защитой целостности.</span></li>
+                    <li><i class="fa-solid fa-check-double"></i> <span><strong>Повышенная надежность:</strong> Внедрена валидация всех пользовательских полей ввода с перехватом исключений.</span></li>
+                    <li><i class="fa-solid fa-check-double"></i> <span><strong>Полная автономность:</strong> Приложение работает без доступа к сторонним серверам и интернету.</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Слайд 8: Финальный -->
+        <div class="slide" id="slide8">
+            <div class="center-content">
+                <div class="final-badge">ИТОГОВАЯ ЗАЩИТА ПРОЕКТА</div>
+                <h1 style="margin-top: 40px; font-size: 80px;">Спасибо за <span>внимание!</span></h1>
+                <p style="font-size: 28px; margin-top: 25px; color: #ffffff; font-weight: 600;">Буду рад ответить на ваши вопросы по проекту MoneyFlow</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Блок точек внизу для легкого переключения на защите -->
+    <div class="pres-footer">
+        <div class="footer-nav" id="dots"></div>
+    </div>
+
+</div>
+
+<script>
+    let current = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dotsBox = document.getElementById('dots');
+
+    // Отрисовываем интерактивные переключатели внизу
+    slides.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+        dot.onclick = () => showSlide(i);
+        dotsBox.appendChild(dot);
+    });
+
+    const dots = document.querySelectorAll('.nav-dot');
+
+    function showSlide(idx) {
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        
+        current = idx;
+        
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
+    }
+
+    // Инициализация при старте
+    slides.forEach((slide, idx) => {
+        if (idx === 0) {
+            slide.classList.add('active');
+        } else {
+            slide.classList.remove('active');
+        }
+    });
+
+    // Навигация с помощью стрелок клавиатуры или пробела
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            showSlide((current + 1) % slides.length);
+        }
+        if (e.key === 'ArrowLeft') {
+            showSlide((current - 1 + slides.length) % slides.length);
+        }
+    });
+</script>
+</body>
+</html>
